@@ -33,6 +33,7 @@ def get_data():
     df = pd.read_csv('Shark Tank India Dataset.csv')
     df['deal_type'] = df['idea'].apply(categorize_pitch)
     df.loc[19,'deal'] = 0
+    df.loc[18,'deal'] = 1
     return df
 
 df = get_data()

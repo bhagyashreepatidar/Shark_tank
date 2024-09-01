@@ -132,15 +132,25 @@ if 'Overall Analysis' in start:
     Total_ask_amount= int(df_filtered_overall["pitcher_ask_amount"].sum())
     pitcher_ask_amount_max= int(df_filtered_overall["pitcher_ask_amount"].max())
     pitcher_ask_amount_min= df_filtered_overall["pitcher_ask_amount"].min()
-    Total_deal_amount= int(df_filtered_overall["deal_amount"].sum())
-    deal_amount_min= int(df_filtered_overall[df_filtered_overall['deal'] == 1]["deal_amount"].min()*100000)
-    deal_amount_max= int(df_filtered_overall[df_filtered_overall['deal'] == 1]["deal_amount"].max())
+    if df_filtered_overall['deal_amount'].to_list()[0]>0:
+        Total_deal_amount= int(df_filtered_overall["deal_amount"].sum())
+        deal_amount_min= int(df_filtered_overall[df_filtered_overall['deal'] == 1]["deal_amount"].min())
+        deal_amount_max= int(df_filtered_overall[df_filtered_overall['deal'] == 1]["deal_amount"].max())
+    else:
+        Total_deal_amount = 0
+        deal_amount_min = 0
+        deal_amount_max = 0
     Total_ask_equity= df_filtered_overall["ask_equity"].sum()
     pitcher_ask_equity_max= df_filtered_overall["ask_equity"].max()
     pitcher_ask_equity_min= df_filtered_overall["ask_equity"].min()
-    Total_deal_equity= df_filtered_overall["deal_equity"].sum()
-    deal_equity_min= df_filtered_overall[df_filtered_overall['deal'] == 1]["deal_equity"].min()
-    deal_equity_max= df_filtered_overall[df_filtered_overall['deal'] == 1]["deal_equity"].max()
+    if df_filtered_overall['deal_amount'].to_list()[0]>0:
+        Total_deal_equity= df_filtered_overall["deal_equity"].sum()
+        deal_equity_min= df_filtered_overall[df_filtered_overall['deal'] == 1]["deal_equity"].min()
+        deal_equity_max= df_filtered_overall[df_filtered_overall['deal'] == 1]["deal_equity"].max()
+    else:
+        Total_deal_equity = 0
+        deal_equity_min = 0
+        deal_equity_max = 0
     col1, col2, col3 , col4 = st.columns([1,1,1,1], gap='small')
     with col1:
         st.info("Ask Amount(Lakhs)",icon="💲")
@@ -151,7 +161,7 @@ if 'Overall Analysis' in start:
         st.info("Deal Amount(Lakhs)",icon="💲")
         st.metric(label="Sum",value=f"{Total_deal_amount}")
         st.metric(label="Max",value=f"{deal_amount_max}")
-        st.metric(label="Min",value=f"{deal_amount_min} Rupees")
+        st.metric(label="Min",value=f"{deal_amount_min}")
     with col3:
         st.info("Ask Equity(Percentage)",icon="🏷️")
         st.metric(label="Sum",value=f"{Total_ask_equity}")
@@ -168,10 +178,13 @@ if 'Overall Analysis' in start:
     st.title("Deal Analysis")
     st.subheader('Top N Largest Deals')
     r = len(df_filtered_overall[df_filtered_overall['deal_amount']>0]['brand_name'])
-    if r <= 10:
-        n = st.select_slider(label='Select N',options=range(1,r+1),value= r)
+    if r>0:
+        if r <= 10:
+            n = st.select_slider(label='Select N',options=range(0,r+1),value= r)
+        else:
+            n = st.select_slider(label='Select N',options=range(1,r+1),value= 10)
     else:
-        n = st.select_slider(label='Select N',options=range(1,r+1),value= 10)
+        n=0
     top_10_deals = df_filtered_overall.nlargest(n, 'deal_amount')[['brand_name', 'deal_amount']]
     fig = px.bar(
         top_10_deals, 
