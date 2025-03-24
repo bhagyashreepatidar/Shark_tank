@@ -140,11 +140,11 @@ if 'Overall Analysis' in start:
         Total_deal_amount = 0
         deal_amount_min = 0
         deal_amount_max = 0
-    Total_ask_equity= df_filtered_overall["ask_equity"].mean()
+    Total_ask_equity= df_filtered_overall["ask_equity"].sum()
     pitcher_ask_equity_max= df_filtered_overall["ask_equity"].max()
     pitcher_ask_equity_min= df_filtered_overall["ask_equity"].min()
     if df_filtered_overall['deal_amount'].to_list()[0]>0:
-        Total_deal_equity= df_filtered_overall["deal_equity"].mean()
+        Total_deal_equity= df_filtered_overall["deal_equity"].sum()
         deal_equity_min= df_filtered_overall[df_filtered_overall['deal'] == 1]["deal_equity"].min()
         deal_equity_max= df_filtered_overall[df_filtered_overall['deal'] == 1]["deal_equity"].max()
     else:
